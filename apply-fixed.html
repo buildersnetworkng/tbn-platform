@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apply — THE BUILDERS NETWORK</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black: #030305;
+      --white: #F0F0F0;
+      --blue: #2563EB;
+      --blue-bright: #60A5FA;
+      --surface: #0A0A0F;
+      --border: rgba(255,255,255,0.08);
+      --error: #F87171;
+      --success: #4ADE80;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body: 'Syne', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      width: 100%;
+      max-width: 540px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(to right, var(--blue), var(--blue-bright));
+    }
+    .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 32px; }
+    .brand__dot { width: 8px; height: 8px; background: var(--blue); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+    .brand__name { font-family: var(--font-display); font-size: 16px; letter-spacing: 0.15em; text-transform: uppercase; }
+    .progress { display: flex; gap: 4px; margin-bottom: 32px; }
+    .progress__step { flex: 1; height: 2px; background: var(--border); transition: background 0.3s; }
+    .progress__step.active { background: var(--blue); }
+    .progress__step.done { background: var(--blue-bright); }
+    .step-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--blue-bright); margin-bottom: 8px; }
+    h1 { font-family: var(--font-display); font-size: 36px; text-transform: uppercase; line-height: 1.1; margin-bottom: 8px; }
+    .subtitle { font-size: 14px; color: rgba(240,240,240,0.4); margin-bottom: 32px; line-height: 1.6; }
+    .step { display: none; }
+    .step.active { display: block; animation: fadeIn 0.4s ease; }
+    .field { margin-bottom: 20px; }
+    .field label { display: block; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(240,240,240,0.5); margin-bottom: 8px; }
+    .field input, .field select, .field textarea {
+      width: 100%; background: var(--black); border: 1px solid var(--border);
+      border-radius: 4px; padding: 14px 16px; color: var(--white);
+      font-family: var(--font-body); font-size: 15px; transition: border-color 0.2s;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--blue); }
+    .field textarea { resize: vertical; min-height: 80px; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .skills-input { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .skill-chip { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 11px; padding: 6px 12px; background: rgba(37,99,235,0.1); border: 1px solid rgba(37,99,235,0.3); border-radius: 20px; color: var(--blue-bright); }
+    .skill-chip button { background: none; border: none; color: var(--blue-bright); cursor: pointer; font-size: 14px; line-height: 1; padding: 0; }
+    .upload-zone { border: 1px dashed var(--border); border-radius: 4px; padding: 24px; text-align: center; cursor: pointer; transition: border-color 0.2s; }
+    .upload-zone:hover { border-color: var(--blue); }
+    .upload-zone.has-file { border-color: var(--success); border-style: solid; }
+    .upload-zone__icon { font-size: 24px; margin-bottom: 8px; }
+    .upload-zone__text { font-size: 13px; color: rgba(240,240,240,0.4); }
+    .upload-zone__filename { font-size: 13px; color: var(--success); margin-top: 4px; }
+    .actions { display: flex; gap: 12px; margin-top: 32px; }
+    .btn { font-family: var(--font-body); font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 15px 32px; border-radius: 4px; border: none; cursor: pointer; transition: all 0.2s; flex: 1; }
+    .btn-primary { background: var(--white); color: var(--black); }
+    .btn-primary:hover { background: var(--blue-bright); }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-secondary { background: transparent; color: rgba(240,240,240,0.5); border: 1px solid var(--border); flex: 0 0 auto; }
+    .btn-secondary:hover { color: var(--white); border-color: var(--white); }
+    .message { padding: 12px 16px; border-radius: 4px; font-size: 13px; margin-bottom: 20px; display: none; }
+    .message.show { display: block; }
+    .message.error { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); color: var(--error); }
+    .message.info { background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); color: var(--blue-bright); }
+    .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid transparent; border-top-color: currentColor; border-radius: 50%; animation: spin 0.6s linear infinite; margin-right: 8px; vertical-align: middle; }
+    .review-box { background: var(--black); border: 1px solid var(--border); border-radius: 4px; padding: 20px; font-size: 13px; line-height: 1.8; color: rgba(240,240,240,0.7); }
+    .review-box strong { color: var(--white); }
+    .success { text-align: center; display: none; }
+    .success.active { display: block; animation: fadeIn 0.5s ease; }
+    .success__icon { font-size: 48px; margin-bottom: 16px; }
+    .success__title { font-family: var(--font-display); font-size: 40px; text-transform: uppercase; margin-bottom: 12px; line-height: 1.1; }
+    .success__desc { font-size: 14px; color: rgba(240,240,240,0.45); line-height: 1.7; margin-bottom: 32px; }
+    .success__actions { display: flex; flex-direction: column; gap: 12px; }
+    .btn-whatsapp { background: #25D366; color: var(--black); text-decoration: none; display: block; text-align: center; padding: 15px; border-radius: 4px; font-family: var(--font-body); font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+    .btn-outline { border: 1px solid var(--border); color: var(--white); text-decoration: none; display: block; text-align: center; padding: 15px; border-radius: 4px; font-family: var(--font-body); font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; transition: border-color 0.2s; }
+    .btn-outline:hover { border-color: var(--blue-bright); color: var(--blue-bright); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    @media (max-width: 600px) { .card { padding: 24px; } .field-row { grid-template-columns: 1fr; } h1 { font-size: 28px; } }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="brand">
+    <div class="brand__dot"></div>
+    <span class="brand__name">The Builders Network</span>
+  </div>
+
+  <div id="formContainer">
+    <div class="progress" id="progress">
+      <div class="progress__step active"></div>
+      <div class="progress__step"></div>
+      <div class="progress__step"></div>
+      <div class="progress__step"></div>
+      <div class="progress__step"></div>
+    </div>
+
+    <div class="message error" id="errorMsg"></div>
+    <div class="message info" id="infoMsg"></div>
+
+    <!-- STEP 1 -->
+    <div class="step active" id="step1">
+      <div class="step-label">Step 01 of 05 — Account</div>
+      <h1>Create Your Account</h1>
+      <p class="subtitle">Your entry point into the ecosystem. Real builders. Real visibility.</p>
+      <div class="field"><label>Full Name</label><input type="text" id="fullName" placeholder="e.g. Yusuff Abdullahi"></div>
+      <div class="field"><label>Email</label><input type="email" id="email" placeholder="you@example.com"></div>
+      <div class="field"><label>Password</label><input type="password" id="password" placeholder="Minimum 6 characters"></div>
+      <div class="actions"><button class="btn btn-primary" onclick="goStep(2)">Continue</button></div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step" id="step2">
+      <div class="step-label">Step 02 of 05 — Background</div>
+      <h1>Where You're Building From</h1>
+      <p class="subtitle">Helps us match you to relevant opportunities.</p>
+      <div class="field-row">
+        <div class="field"><label>Country</label><input type="text" id="country" value="Nigeria"></div>
+        <div class="field"><label>City</label><input type="text" id="city" placeholder="e.g. Lagos"></div>
+      </div>
+      <div class="field">
+        <label>Education Level</label>
+        <select id="educationLevel">
+          <option value="">Select...</option>
+          <option value="secondary">Secondary</option>
+          <option value="undergraduate">Undergraduate</option>
+          <option value="postgraduate">Postgraduate</option>
+          <option value="graduate">Graduate</option>
+          <option value="self-taught">Self-Taught</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="field"><label>Institution (optional)</label><input type="text" id="institution" placeholder="e.g. University of Lagos"></div>
+      <div class="actions">
+        <button class="btn btn-secondary" onclick="goStep(1)">Back</button>
+        <button class="btn btn-primary" onclick="goStep(3)">Continue</button>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step" id="step3">
+      <div class="step-label">Step 03 of 05 — Skills</div>
+      <h1>What Are You Building With</h1>
+      <p class="subtitle">Your primary skill defines how you show up across the network.</p>
+      <div class="field">
+        <label>Primary Skill</label>
+        <select id="primarySkill">
+          <option value="">Select...</option>
+          <option>Frontend Development</option>
+          <option>Backend Development</option>
+          <option>Full Stack Development</option>
+          <option>Mobile Development</option>
+          <option>UI/UX Design</option>
+          <option>Graphic Design</option>
+          <option>AI / Machine Learning</option>
+          <option>Data Science</option>
+          <option>Cybersecurity</option>
+          <option>DevOps / Cloud</option>
+          <option>Product Management</option>
+          <option>Digital Marketing</option>
+          <option>Blockchain / Web3</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Secondary Skills (press Enter to add)</label>
+        <input type="text" id="secondarySkillInput" placeholder="e.g. React, type and press Enter">
+        <div class="skills-input" id="skillsContainer"></div>
+      </div>
+      <div class="field"><label>Short Bio</label><textarea id="bio" placeholder="What are you currently building? One or two sentences."></textarea></div>
+      <div class="actions">
+        <button class="btn btn-secondary" onclick="goStep(2)">Back</button>
+        <button class="btn btn-primary" onclick="goStep(4)">Continue</button>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step" id="step4">
+      <div class="step-label">Step 04 of 05 — Proof</div>
+      <h1>Show Your Work</h1>
+      <p class="subtitle">Links and assets that show what you have built. All optional.</p>
+      <div class="field"><label>Portfolio URL</label><input type="url" id="portfolioUrl" placeholder="https://..."></div>
+      <div class="field-row">
+        <div class="field"><label>GitHub</label><input type="url" id="githubUrl" placeholder="https://github.com/..."></div>
+        <div class="field"><label>LinkedIn</label><input type="url" id="linkedinUrl" placeholder="https://linkedin.com/..."></div>
+      </div>
+      <div class="field"><label>X (Twitter)</label><input type="url" id="xUrl" placeholder="https://x.com/..."></div>
+      <div class="field">
+        <label>CV / Resume (PDF, optional)</label>
+        <div class="upload-zone" id="cvZone">
+          <div class="upload-zone__icon">📄</div>
+          <div class="upload-zone__text">Tap to upload your CV</div>
+          <div class="upload-zone__filename" id="cvFileName"></div>
+        </div>
+        <input type="file" id="cvFile" accept=".pdf" style="display:none">
+      </div>
+      <div class="field">
+        <label>Profile Image (optional)</label>
+        <div class="upload-zone" id="imageZone">
+          <div class="upload-zone__icon">🖼️</div>
+          <div class="upload-zone__text">Tap to upload a photo</div>
+          <div class="upload-zone__filename" id="imageFileName"></div>
+        </div>
+        <input type="file" id="imageFile" accept="image/*" style="display:none">
+      </div>
+      <div class="actions">
+        <button class="btn btn-secondary" onclick="goStep(3)">Back</button>
+        <button class="btn btn-primary" onclick="buildReview()">Review</button>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="step" id="step5">
+      <div class="step-label">Step 05 of 05 — Review</div>
+      <h1>Confirm Your Profile</h1>
+      <p class="subtitle">Check everything before entering the ecosystem.</p>
+      <div class="review-box" id="reviewBox"></div>
+      <div class="actions">
+        <button class="btn btn-secondary" onclick="goStep(4)">Back</button>
+        <button class="btn btn-primary" id="submitBtn" onclick="submitProfile()">Create Profile</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="success" id="successScreen">
+    <div class="success__icon">🏆</div>
+    <h1 class="success__title">Welcome to<br>The Builders Network.</h1>
+    <p class="success__desc">
+      Your builder profile has been created.<br><br>
+      Once approved, your profile becomes part of the ecosystem and can participate in projects, teams, opportunities and recognition programs.<br><br>
+      Join the community to start building in public.
+    </p>
+    <div class="success__actions">
+      <a href="https://chat.whatsapp.com/DcmiH3z8h7QHIAY25Eu4Sw" target="_blank" class="btn-whatsapp">Join WhatsApp Community</a>
+      <a href="https://whatsapp.com/channel/" target="_blank" class="btn-outline">Follow WhatsApp Channel</a>
+      <a href="/" class="btn-outline">Return Home</a>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // ============ INIT SUPABASE ============
+  const { createClient } = supabase;
+  const db = createClient(
+    'https://ouzhjyxbrwponrvktwor.supabase.co',
+    'sb_publishable_qj8VbYxzjKQ0pNqUJMak6Q_tRybOiQZ'
+  );
+
+  // ============ STATE ============
+  let secondarySkills = [];
+  let cvFile = null;
+  let imageFile = null;
+  let currentStep = 1;
+
+  // ============ STEP NAV ============
+  function goStep(n) {
+    // Validate before moving forward
+    if (n > currentStep) {
+      if (currentStep === 1) {
+        const name = document.getElementById('fullName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const pass = document.getElementById('password').value;
+        if (!name || !email || !pass) return showError('Please fill in all fields.');
+        if (pass.length < 6) return showError('Password must be at least 6 characters.');
+      }
+      if (currentStep === 3) {
+        if (!document.getElementById('primarySkill').value) return showError('Please select your primary skill.');
+      }
+    }
+
+    document.getElementById('step' + currentStep).classList.remove('active');
+    document.getElementById('step' + n).classList.add('active');
+
+    const steps = document.querySelectorAll('.progress__step');
+    steps.forEach((s, i) => {
+      s.classList.remove('active', 'done');
+      if (i + 1 < n) s.classList.add('done');
+      if (i + 1 === n) s.classList.add('active');
+    });
+
+    currentStep = n;
+    clearMessages();
+  }
+
+  // ============ SKILLS ============
+  document.getElementById('secondarySkillInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const val = this.value.trim();
+      if (val && !secondarySkills.includes(val)) {
+        secondarySkills.push(val);
+        renderSkills();
+      }
+      this.value = '';
+    }
+  });
+
+  function renderSkills() {
+    const c = document.getElementById('skillsContainer');
+    c.innerHTML = '';
+    secondarySkills.forEach((s, i) => {
+      const chip = document.createElement('div');
+      chip.className = 'skill-chip';
+      chip.innerHTML = s + ' <button type="button" onclick="removeSkill(' + i + ')">×</button>';
+      c.appendChild(chip);
+    });
+  }
+
+  function removeSkill(i) {
+    secondarySkills.splice(i, 1);
+    renderSkills();
+  }
+
+  // ============ FILE UPLOADS ============
+  document.getElementById('cvZone').addEventListener('click', () => document.getElementById('cvFile').click());
+  document.getElementById('cvFile').addEventListener('change', function() {
+    const f = this.files[0];
+    if (f && f.size <= 5 * 1024 * 1024) {
+      cvFile = f;
+      document.getElementById('cvFileName').textContent = f.name;
+      document.getElementById('cvZone').classList.add('has-file');
+    } else if (f) {
+      showError('CV must be under 5MB.');
+    }
+  });
+
+  document.getElementById('imageZone').addEventListener('click', () => document.getElementById('imageFile').click());
+  document.getElementById('imageFile').addEventListener('change', function() {
+    const f = this.files[0];
+    if (f && f.size <= 5 * 1024 * 1024) {
+      imageFile = f;
+      document.getElementById('imageFileName').textContent = f.name;
+      document.getElementById('imageZone').classList.add('has-file');
+    } else if (f) {
+      showError('Image must be under 5MB.');
+    }
+  });
+
+  // ============ REVIEW ============
+  function buildReview() {
+    const get = id => document.getElementById(id).value.trim() || '—';
+    document.getElementById('reviewBox').innerHTML =
+      '<strong>Name:</strong> ' + get('fullName') + '<br>' +
+      '<strong>Email:</strong> ' + get('email') + '<br>' +
+      '<strong>Location:</strong> ' + get('city') + ', ' + get('country') + '<br>' +
+      '<strong>Education:</strong> ' + (document.getElementById('educationLevel').value || '—') + '<br>' +
+      '<strong>Institution:</strong> ' + get('institution') + '<br><br>' +
+      '<strong>Primary Skill:</strong> ' + (document.getElementById('primarySkill').value || '—') + '<br>' +
+      '<strong>Secondary Skills:</strong> ' + (secondarySkills.length ? secondarySkills.join(', ') : '—') + '<br>' +
+      '<strong>Bio:</strong> ' + get('bio') + '<br><br>' +
+      '<strong>Portfolio:</strong> ' + get('portfolioUrl') + '<br>' +
+      '<strong>GitHub:</strong> ' + get('githubUrl') + '<br>' +
+      '<strong>LinkedIn:</strong> ' + get('linkedinUrl') + '<br>' +
+      '<strong>X:</strong> ' + get('xUrl') + '<br><br>' +
+      '<strong>CV:</strong> ' + (cvFile ? cvFile.name : 'Not uploaded') + '<br>' +
+      '<strong>Profile Image:</strong> ' + (imageFile ? imageFile.name : 'Not uploaded');
+    goStep(5);
+  }
+
+  // ============ SUBMIT ============
+  async function submitProfile() {
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Creating profile...';
+    clearMessages();
+
+    try {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const fullName = document.getElementById('fullName').value.trim();
+
+      // 1. Create auth account
+      const { data: authData, error: authError } = await db.auth.signUp({ email, password });
+      if (authError) throw new Error(authError.message);
+
+      const userId = authData.user?.id;
+      if (!userId) throw new Error('Account creation failed. Please try again.');
+
+      // 2. Upload CV if provided
+      let cvUrl = null;
+      if (cvFile) {
+        const { error: cvErr } = await db.storage
+          .from('cv-uploads')
+          .upload(userId + '/cv.pdf', cvFile, { upsert: true });
+        if (!cvErr) cvUrl = userId + '/cv.pdf';
+      }
+
+      // 3. Upload profile image if provided
+      let imageUrl = null;
+      if (imageFile) {
+        const ext = imageFile.name.split('.').pop();
+        const path = userId + '/profile.' + ext;
+        const { error: imgErr } = await db.storage
+          .from('profile-images')
+          .upload(path, imageFile, { upsert: true });
+        if (!imgErr) {
+          const { data: urlData } = db.storage.from('profile-images').getPublicUrl(path);
+          imageUrl = urlData.publicUrl;
+        }
+      }
+
+      // 4. Insert builder record
+      const { error: insertError } = await db.from('builders').insert([{
+        auth_user_id: userId,
+        full_name: fullName,
+        email: email,
+        country: document.getElementById('country').value.trim() || null,
+        city: document.getElementById('city').value.trim() || null,
+        education_level: document.getElementById('educationLevel').value || null,
+        institution: document.getElementById('institution').value.trim() || null,
+        primary_skill: document.getElementById('primarySkill').value || null,
+        secondary_skills: secondarySkills.length ? secondarySkills : null,
+        bio: document.getElementById('bio').value.trim() || null,
+        portfolio_url: document.getElementById('portfolioUrl').value.trim() || null,
+        github_url: document.getElementById('githubUrl').value.trim() || null,
+        linkedin_url: document.getElementById('linkedinUrl').value.trim() || null,
+        x_url: document.getElementById('xUrl').value.trim() || null,
+        cv_url: cvUrl,
+        profile_image_url: imageUrl,
+        profile_status: 'pending',
+        builder_score: 0
+      }]);
+
+      if (insertError) throw new Error(insertError.message);
+
+      // Success
+      document.getElementById('formContainer').style.display = 'none';
+      document.getElementById('successScreen').classList.add('active');
+
+    } catch (err) {
+      showError(err.message || 'Something went wrong. Please try again.');
+      btn.disabled = false;
+      btn.textContent = 'Create Profile';
+    }
+  }
+
+  // ============ MESSAGES ============
+  function showError(msg) {
+    const el = document.getElementById('errorMsg');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 6000);
+  }
+
+  function clearMessages() {
+    document.getElementById('errorMsg').classList.remove('show');
+    document.getElementById('infoMsg').classList.remove('show');
+  }
+</script>
+</body>
+</html>
