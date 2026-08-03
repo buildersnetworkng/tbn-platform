@@ -1,5 +1,12 @@
 import Link from 'next/link';
 
+const SOCIAL_LINKS = [
+  { label: 'Instagram', href: 'https://www.instagram.com/thebuildersnet_/' },
+  { label: 'X', href: 'https://x.com/thebuildersnet_' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/company/thebuildersnet/' },
+  { label: 'WhatsApp', href: 'https://chat.whatsapp.com/DcmiH3z8h7QHIAY25Eu4Sw' },
+];
+
 const LINK_GROUPS = [
   {
     title: 'Platform',
@@ -36,6 +43,19 @@ export function Footer() {
             THE BUILDERS NETWORK
           </Link>
           <p className="mt-3 max-w-[220px] font-sans text-sm text-text-muted">Learn. Build. Collaborate.</p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            {SOCIAL_LINKS.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-sans text-xs text-text-muted transition-colors duration-150 hover:text-text-primary"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
         </div>
 
         {LINK_GROUPS.map((group) => (

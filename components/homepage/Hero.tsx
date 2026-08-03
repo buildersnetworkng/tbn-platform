@@ -42,7 +42,7 @@ export function Hero() {
           {...revealAt(0.3)}
           className="mt-10 flex w-full max-w-[320px] flex-col items-center gap-3 tablet:max-w-none tablet:w-auto tablet:flex-row tablet:gap-4"
         >
-          <Button variant="primary" href="/apply" className="w-full tablet:w-auto">
+          <Button variant="primary" href="https://buildersnetworkng.github.io/tbn-platform/apply/" className="w-full tablet:w-auto">
             Apply
           </Button>
           <Button variant="secondary" href="/builders" className="w-full tablet:w-auto">

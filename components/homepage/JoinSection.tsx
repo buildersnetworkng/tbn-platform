@@ -24,7 +24,7 @@ export function JoinSection() {
           If you&apos;re building something real, this is where it starts to show.
         </h2>
         <div className="mt-8 flex justify-center">
-          <Button variant="primary" href="/apply" className="w-full max-w-[320px] tablet:w-auto">
+          <Button variant="primary" href="https://buildersnetworkng.github.io/tbn-platform/apply/" className="w-full max-w-[320px] tablet:w-auto">
             Apply to join THE BUILDERS NETWORK
           </Button>
         </div>
