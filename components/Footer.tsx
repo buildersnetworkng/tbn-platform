@@ -39,8 +39,11 @@ export function Footer() {
     <footer aria-label="Footer navigation" className="mx-auto w-full max-w-content px-5 pb-14 pt-20 tablet:px-8 desktop:px-12">
       <div className="grid grid-cols-1 gap-10 tablet:grid-cols-4 tablet:gap-8">
         <div>
-          <Link href="/" className="font-sans text-sm font-semibold text-text-primary">
-            THE BUILDERS NETWORK
+          <Link href="/" className="flex items-center gap-2">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <circle cx="10" cy="10" r="8" stroke="#C7D9FF" strokeWidth="2.4" />
+            </svg>
+            <span className="font-sans text-sm font-bold text-accent">THE BUILDERS NETWORK</span>
           </Link>
           <p className="mt-3 max-w-[220px] font-sans text-sm text-text-muted">Learn. Build. Collaborate.</p>
           <div className="mt-4 flex flex-wrap gap-3">

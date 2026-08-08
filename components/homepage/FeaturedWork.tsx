@@ -1,5 +1,6 @@
 import { ProjectCapability } from '@/capabilities/ProjectCapability';
 import { SectionShell } from '../ui/SectionShell';
+import { Marquee } from '../ui/Marquee';
 import { ProjectCard } from './ProjectCard';
 
 export async function FeaturedWork() {
@@ -17,11 +18,13 @@ export async function FeaturedWork() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 tablet:grid-cols-2 desktop:grid-cols-3" style={{ rowGap: '32px' }}>
+      <Marquee durationSeconds={Math.max(30, result.data.length * 7)}>
         {result.data.map((project) => (
-          <ProjectCard key={project.id} project={project} />
+          <div key={project.id} className="w-[300px] flex-shrink-0 tablet:w-[340px]">
+            <ProjectCard project={project} />
+          </div>
         ))}
-      </div>
+      </Marquee>
     </SectionShell>
   );
 }
