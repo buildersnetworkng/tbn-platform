@@ -185,3 +185,25 @@ body {
   background-color: var(--color-accent);
   animation: system-pulse 3s ease-in-out infinite;
 }
+
+@keyframes hero-breathe {
+  0%, 100% { opacity: 0.94; }
+  50% { opacity: 1; }
+}
+.hero-breathe {
+  animation: hero-breathe 7s ease-in-out infinite;
+}
+
+@keyframes grid-cell-pulse {
+  0%, 100% { opacity: var(--cell-base-opacity, 0.35); }
+  50% { opacity: calc(var(--cell-base-opacity, 0.35) + 0.25); }
+}
+.identity-cell {
+  animation: grid-cell-pulse 4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-breathe,
+  .identity-cell {
+    animation: none;
+  }
+}
