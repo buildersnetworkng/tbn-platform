@@ -9,8 +9,10 @@ export default function MarketingLayout({
   return (
     <>
       <IdentityBar />
-      <main>{children}</main>
-      <Footer />
+      <main className="relative z-10">{children}</main>
+      <div className="relative z-10">
+        <Footer />
+      </div>
     </>
   );
 }
