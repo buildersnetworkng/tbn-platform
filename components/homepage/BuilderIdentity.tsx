@@ -7,13 +7,13 @@ export function BuilderIdentity() {
       <div className="flex flex-col items-center gap-10 tablet:flex-row tablet:items-center tablet:gap-16">
         <div className="flex max-w-[560px] flex-col tablet:w-[55%]">
           <h2 className="font-serif text-[22px] leading-[1.25] text-text-primary tablet:text-[26px] desktop:text-[32px]">
-            Visibility isn&apos;t given here. It&apos;s built.
+            Visibility isn't given here. It's built.
           </h2>
           <p className="mt-4 font-sans text-base leading-[1.5] text-text-secondary">
-            A builder on this platform isn&apos;t a title or a bio — it&apos;s a track
+            A builder on this platform isn't a title or a bio. It's a track
             record. Every project you ship becomes part of a public record anyone can
-            verify. There&apos;s no follower count to inflate and no algorithm to game.
-            If you&apos;re building something real, this is where it starts to show.
+            verify. There's no follower count to inflate and no algorithm to game.
+            If you're building something real, this is where it starts to show.
           </p>
         </div>
 
