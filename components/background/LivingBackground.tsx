@@ -35,7 +35,6 @@ function createStreams(count: number): Stream[] {
 }
 
 function createNodes(count: number): GraphNode[] {
-  // Deterministic-ish spread so the graph reads as infrastructure, not confetti
   return Array.from({ length: count }, (_, id) => {
     const col = id % 6;
     const row = Math.floor(id / 6);
@@ -49,14 +48,16 @@ function createNodes(count: number): GraphNode[] {
   });
 }
 
-function buildEdges(nodes: GraphNode[]): Array<[number, number]> {
-  const edges: Array<[number, number]> = [];
+function buildEdges(nodes: GraphNode[]): Array<[GraphNode, GraphNode]> {
+  const edges: Array<[GraphNode, GraphNode]> = [];
   for (let i = 0; i < nodes.length; i++) {
+    const a = nodes[i];
+    if (!a) continue;
     for (let j = i + 1; j < nodes.length; j++) {
-      const dx = nodes[i].x - nodes[j].x;
-      const dy = nodes[i].y - nodes[j].y;
-      const dist = Math.hypot(dx, dy);
-      if (dist < 28) edges.push([i, j]);
+      const b = nodes[j];
+      if (!b) continue;
+      const dist = Math.hypot(a.x - b.x, a.y - b.y);
+      if (dist < 28) edges.push([a, b]);
     }
   }
   return edges;
@@ -118,28 +119,24 @@ export function LivingBackground() {
       className="living-background pointer-events-none fixed inset-0 z-0 overflow-hidden"
       style={{ backgroundColor: 'var(--color-bg-primary)' }}
     >
-      {/* Cool ambient core glow — restrained, not soft beauty orbs */}
       <div className="tech-ambient" />
 
-      {/* Perspective engineering grid */}
       <div className="living-parallax living-parallax-slow">
         <div className="tech-grid" />
       </div>
 
-      {/* Horizontal scan beam */}
       {!prefersReduced && <div className="tech-scan" />}
 
-      {/* Node graph — infrastructure network */}
       <div className="living-parallax living-parallax-mid">
         <svg className="tech-graph" viewBox="0 0 100 100" preserveAspectRatio="none">
           {edges.map(([a, b], i) => (
             <line
               key={`e-${i}`}
               className="tech-edge"
-              x1={nodes[a].x}
-              y1={nodes[a].y}
-              x2={nodes[b].x}
-              y2={nodes[b].y}
+              x1={a.x}
+              y1={a.y}
+              x2={b.x}
+              y2={b.y}
               style={{ animationDelay: `${(i % 8) * 0.35}s` }}
             />
           ))}
@@ -158,7 +155,6 @@ export function LivingBackground() {
         </svg>
       </div>
 
-      {/* Vertical data streams */}
       {!prefersReduced && (
         <div className="living-parallax living-parallax-fast">
           <div className="tech-streams">
@@ -181,7 +177,6 @@ export function LivingBackground() {
         </div>
       )}
 
-      {/* Corner circuit marks */}
       <div className="tech-circuit tech-circuit-tl" />
       <div className="tech-circuit tech-circuit-br" />
 
