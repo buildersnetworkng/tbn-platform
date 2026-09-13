@@ -69,7 +69,26 @@ body {
   .identity-bar[data-scroll-state='scrolled'] { height: 52px; }
 }
 
-/* ── Living background: color mesh ─────────────────────────── */
+/* ── Scroll parallax layers ────────────────────────────────── */
+.living-parallax {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+.living-parallax-slow {
+  transform: translate3d(0, var(--parallax-slow, 0px), 0);
+}
+.living-parallax-mid {
+  transform: translate3d(0, var(--parallax-mid, 0px), 0);
+}
+.living-parallax-fast {
+  transform: translate3d(0, var(--parallax-fast, 0px), 0);
+}
+.living-parallax-particles {
+  transform: translate3d(0, var(--parallax-particles, 0px), 0);
+}
+
+/* ── Color mesh ────────────────────────────────────────────── */
 .living-mesh {
   position: absolute;
   inset: -20%;
@@ -79,8 +98,7 @@ body {
     radial-gradient(ellipse 60% 70% at 60% 80%, rgba(100, 200, 255, 0.12) 0%, transparent 55%),
     radial-gradient(ellipse 50% 40% at 10% 70%, rgba(180, 120, 255, 0.1) 0%, transparent 50%);
   filter: hue-rotate(var(--hue-shift, 0deg));
-  transform: translate3d(0, var(--parallax-slow, 0px), 0) scale(1.05);
-  will-change: transform, filter;
+  will-change: filter;
   animation: mesh-breathe 18s ease-in-out infinite;
 }
 
@@ -110,7 +128,6 @@ body {
     transparent 70%
   );
   animation: living-drift-1 16s ease-in-out infinite;
-  transform: translate3d(0, var(--parallax-mid, 0px), 0);
 }
 
 .living-field-2 {
@@ -125,7 +142,6 @@ body {
     transparent 70%
   );
   animation: living-drift-2 21s ease-in-out infinite;
-  transform: translate3d(0, var(--parallax-fast, 0px), 0);
 }
 
 .living-field-3 {
@@ -140,7 +156,6 @@ body {
     transparent 70%
   );
   animation: living-drift-3 26s ease-in-out infinite;
-  transform: translate3d(0, var(--parallax-slow, 0px), 0);
 }
 
 .living-field-4 {
@@ -155,33 +170,30 @@ body {
     transparent 70%
   );
   animation: living-drift-4 19s ease-in-out infinite;
-  transform: translate3d(0, var(--parallax-mid, 0px), 0);
 }
 
 @keyframes living-drift-1 {
-  0%, 100% { transform: translate3d(0, var(--parallax-mid, 0px), 0) scale(1); }
-  50% { transform: translate3d(16vw, calc(10vh + var(--parallax-mid, 0px)), 0) scale(1.12); }
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(16vw, 10vh, 0) scale(1.12); }
 }
 @keyframes living-drift-2 {
-  0%, 100% { transform: translate3d(0, var(--parallax-fast, 0px), 0) scale(1); }
-  50% { transform: translate3d(-14vw, calc(12vh + var(--parallax-fast, 0px)), 0) scale(1.15); }
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-14vw, 12vh, 0) scale(1.15); }
 }
 @keyframes living-drift-3 {
-  0%, 100% { transform: translate3d(0, var(--parallax-slow, 0px), 0) scale(1); }
-  50% { transform: translate3d(11vw, calc(-9vh + var(--parallax-slow, 0px)), 0) scale(1.1); }
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(11vw, -9vh, 0) scale(1.1); }
 }
 @keyframes living-drift-4 {
-  0%, 100% { transform: translate3d(0, var(--parallax-mid, 0px), 0) scale(1); }
-  33% { transform: translate3d(-8vw, calc(6vh + var(--parallax-mid, 0px)), 0) scale(1.08); }
-  66% { transform: translate3d(10vw, calc(-5vh + var(--parallax-mid, 0px)), 0) scale(1.14); }
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33% { transform: translate3d(-8vw, 6vh, 0) scale(1.08); }
+  66% { transform: translate3d(10vw, -5vh, 0) scale(1.14); }
 }
 
 /* ── Flying particles ──────────────────────────────────────── */
 .living-particles {
   position: absolute;
   inset: 0;
-  transform: translate3d(0, var(--parallax-particles, 0px), 0);
-  will-change: transform;
 }
 
 .living-particle {
@@ -246,12 +258,15 @@ body {
 .living-background[data-reduced='true'] .living-mesh {
   animation: none;
   filter: none;
-  transform: none;
 }
 
 .living-background[data-reduced='true'] .living-field {
   animation: none;
   filter: none;
+}
+
+.living-background[data-reduced='true'] .living-parallax {
+  transform: none;
 }
 
 /* ── Marquee ───────────────────────────────────────────────── */
