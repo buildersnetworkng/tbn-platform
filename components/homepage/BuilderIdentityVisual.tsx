@@ -10,11 +10,13 @@ export function BuilderIdentityVisual() {
       {Array.from({ length: GRID_SIZE }).map((_, index) => (
         <div
           key={index}
-          className={`aspect-square rounded-md transition-colors duration-500 ${
-            LIT_INDICES.has(index)
-              ? 'bg-accent/70'
-              : 'bg-white/[0.06]'
+          className={`identity-cell aspect-square rounded-md ${
+            LIT_INDICES.has(index) ? 'bg-accent/70' : 'bg-white/[0.08]'
           }`}
+          style={{
+            animationDelay: `${(index % 12) * 0.35}s`,
+            ['--cell-base-opacity' as string]: LIT_INDICES.has(index) ? 0.55 : 0.35,
+          }}
         />
       ))}
     </div>
