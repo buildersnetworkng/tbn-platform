@@ -14,7 +14,7 @@ export async function LivingEcosystem() {
           A growing ecosystem, not a static directory.
         </h2>
         <p className="mt-3 font-sans text-base leading-[1.5] text-text-secondary">
-          Every number below reflects the platform as it actually is right now — nothing here is projected or simulated.
+          Every number below reflects the platform as it actually is right now. Nothing here is projected or simulated.
         </p>
       </div>
       {stats.length > 0 ? (
@@ -27,10 +27,10 @@ export async function LivingEcosystem() {
         <div className="mt-10 rounded-lg border border-border bg-surface px-6 py-14 text-center">
           <GrowthVisual />
           <p className="mt-6 font-serif text-lg text-text-primary tablet:text-xl">
-            We report growth as it happens — not before it&apos;s real.
+            We report growth as it happens, not before it's real.
           </p>
           <p className="mx-auto mt-2 max-w-[420px] font-sans text-sm text-text-muted">
-            These numbers go live the moment there&apos;s real activity behind them.
+            These numbers go live the moment there's real activity behind them.
           </p>
         </div>
       )}
