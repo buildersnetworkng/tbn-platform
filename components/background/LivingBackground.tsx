@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useReducedMotion } from '@/experience';
 
-const PARTICLE_COUNT = 48;
+const PARTICLE_COUNT = 56;
 
 type Particle = {
   id: number;
@@ -20,12 +20,12 @@ function createParticles(count: number): Particle[] {
   return Array.from({ length: count }, (_, id) => ({
     id,
     x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: 1.5 + Math.random() * 2.5,
-    opacity: 0.15 + Math.random() * 0.45,
-    duration: 14 + Math.random() * 22,
-    delay: Math.random() * -20,
-    driftX: (Math.random() - 0.5) * 40,
+    y: Math.random() * 110 - 5,
+    size: 2.5 + Math.random() * 4.5,
+    opacity: 0.45 + Math.random() * 0.55,
+    duration: 10 + Math.random() * 16,
+    delay: Math.random() * -18,
+    driftX: (Math.random() - 0.5) * 50,
   }));
 }
 
@@ -58,13 +58,14 @@ export function LivingBackground() {
         const el = rootRef.current;
         if (!el) return;
         const y = latestY;
-        el.style.setProperty('--parallax-slow', `${y * 0.08}px`);
-        el.style.setProperty('--parallax-mid', `${y * 0.14}px`);
-        el.style.setProperty('--parallax-fast', `${y * 0.22}px`);
-        el.style.setProperty('--parallax-particles', `${y * 0.12}px`);
+        // Stronger parallax so scroll motion is obvious
+        el.style.setProperty('--parallax-slow', `${y * 0.12}px`);
+        el.style.setProperty('--parallax-mid', `${y * 0.22}px`);
+        el.style.setProperty('--parallax-fast', `${y * 0.35}px`);
+        el.style.setProperty('--parallax-particles', `${y * 0.18}px`);
         const max = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
         const progress = Math.min(y / max, 1);
-        el.style.setProperty('--hue-shift', `${progress * 28}deg`);
+        el.style.setProperty('--hue-shift', `${progress * 40}deg`);
       });
     }
 
@@ -84,12 +85,10 @@ export function LivingBackground() {
       data-reduced={prefersReduced ? 'true' : 'false'}
       className="living-background pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-background-primary"
     >
-      {/* Color mesh — slow parallax + hue shift on scroll */}
       <div className="living-parallax living-parallax-slow">
         <div className="living-mesh" />
       </div>
 
-      {/* Drifting orbs at different depths */}
       <div className="living-parallax living-parallax-mid">
         <div className="living-field living-field-1" />
         <div className="living-field living-field-4" />
@@ -101,7 +100,6 @@ export function LivingBackground() {
         <div className="living-field living-field-3" />
       </div>
 
-      {/* Flying particles */}
       {!prefersReduced && (
         <div className="living-parallax living-parallax-particles">
           <div className="living-particles">
