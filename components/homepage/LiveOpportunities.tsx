@@ -13,7 +13,7 @@ export async function LiveOpportunities() {
           Live Opportunities
         </h2>
         <p className="mt-3 font-sans text-base leading-[1.5] text-text-secondary">
-          Organizations come here to find builders through what they&apos;ve actually shipped.
+          Organizations come here to find builders through what they've actually shipped.
         </p>
       </div>
       {opportunities.length > 0 ? (
@@ -25,7 +25,7 @@ export async function LiveOpportunities() {
       ) : (
         <div className="mx-auto max-w-[720px] rounded-lg border border-border bg-surface px-6 py-10 text-center">
           <p className="font-sans text-sm text-text-muted">
-            New opportunities are reviewed continuously — check back soon.
+            New opportunities are reviewed continuously. Check back soon.
           </p>
         </div>
       )}
