@@ -15,6 +15,7 @@ export async function OrganizationsPartners() {
           Organizations & Partners
         </h2>
       </div>
+
       {organizations.length > 0 ? (
         <div className="grid grid-cols-3 items-center gap-8 tablet:grid-cols-4 desktop:grid-cols-6">
           {organizations.map((org) => (
@@ -27,7 +28,7 @@ export async function OrganizationsPartners() {
         <div className="mx-auto max-w-[560px] rounded-lg border border-border bg-surface px-6 py-14 text-center">
           <OrganizationSlotsVisual />
           <p className="mt-6 font-sans text-sm leading-[1.5] text-text-secondary">
-            Partnership announcements appear here the moment they&apos;re official — not before.
+            Partnership announcements appear here the moment they're official, not before.
           </p>
           <div className="mt-6 flex justify-center">
             <Button variant="secondary" href="/partner">Partner With THE BUILDERS NETWORK</Button>
