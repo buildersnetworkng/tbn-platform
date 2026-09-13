@@ -8,25 +8,15 @@ export function Hero() {
 
   const revealAt = (delaySeconds: number) =>
     prefersReduced
-      ? {
-          initial: { opacity: 0 },
-          animate: { opacity: 1, transition: { duration: motionTokens.DURATION.base, ease: motionTokens.EASE_SIMPLE, delay: delaySeconds } },
-        }
-      : {
-          initial: { opacity: 0, y: 16 },
-          animate: {
-            opacity: 1,
-            y: 0,
-            transition: { duration: motionTokens.DURATION.slow, ease: motionTokens.EASE_STANDARD, delay: delaySeconds },
-          },
-        };
+      ? { initial: { opacity: 0 }, animate: { opacity: 1, transition: { duration: motionTokens.DURATION.base, ease: motionTokens.EASE_SIMPLE, delay: delaySeconds } } }
+      : { initial: { opacity: 0, y: 16 }, animate: { opacity: 1, y: 0, transition: { duration: motionTokens.DURATION.slow, ease: motionTokens.EASE_STANDARD, delay: delaySeconds } } };
 
   return (
     <section className="relative flex min-h-[640px] h-screen flex-col items-center justify-center px-5 text-center tablet:px-8 desktop:px-12">
       <div className="flex max-w-[760px] flex-col items-center">
         <motion.h1
           {...revealAt(0)}
-          className="font-serif text-[40px] leading-[1.1] text-text-primary tablet:text-[56px] desktop:text-[88px]"
+          className={`font-serif text-[40px] leading-[1.1] text-text-primary tablet:text-[56px] desktop:text-[88px] ${prefersReduced ? '' : 'hero-breathe'}`}
         >
           Where builders become visible.
         </motion.h1>
@@ -35,7 +25,7 @@ export function Hero() {
           {...revealAt(0.15)}
           className="mt-6 max-w-[560px] font-sans text-base leading-[1.5] text-text-secondary tablet:text-lg desktop:text-xl"
         >
-          Students, engineers, self-taught builders — ship real work and get discovered.
+          Students, engineers, self-taught builders who ship real work and get discovered.
         </motion.p>
 
         <motion.div
