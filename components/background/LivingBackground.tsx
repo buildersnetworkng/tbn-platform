@@ -58,7 +58,6 @@ export function LivingBackground() {
         const el = rootRef.current;
         if (!el) return;
         const y = latestY;
-        // Stronger parallax so scroll motion is obvious
         el.style.setProperty('--parallax-slow', `${y * 0.12}px`);
         el.style.setProperty('--parallax-mid', `${y * 0.22}px`);
         el.style.setProperty('--parallax-fast', `${y * 0.35}px`);
@@ -83,7 +82,8 @@ export function LivingBackground() {
       aria-hidden="true"
       data-paused={isPaused || prefersReduced}
       data-reduced={prefersReduced ? 'true' : 'false'}
-      className="living-background pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-background-primary"
+      className="living-background pointer-events-none fixed inset-0 z-0 overflow-hidden"
+      style={{ backgroundColor: 'var(--color-bg-primary)' }}
     >
       <div className="living-parallax living-parallax-slow">
         <div className="living-mesh" />
