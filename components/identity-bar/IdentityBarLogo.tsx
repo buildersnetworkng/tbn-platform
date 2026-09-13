@@ -4,7 +4,7 @@ export function IdentityBarLogo() {
   return (
     <Link
       href="/"
-      aria-label="THE BUILDERS NETWORK — Home"
+      aria-label="THE BUILDERS NETWORK, Home"
       className="flex items-center gap-2.5 transition-opacity duration-150 hover:opacity-85"
     >
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
