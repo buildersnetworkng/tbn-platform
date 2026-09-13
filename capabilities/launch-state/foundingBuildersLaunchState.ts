@@ -10,7 +10,7 @@ export const FOUNDING_BUILDERS_LAUNCH_STATE: Builder[] = [
     skills: [],
     profileHref: '#',
     profileSummary:
-      'Shipped Profyl — one link, two ways to show your work — then custom domain mapping two weeks later. Now rebuilding the dashboard for v2.',
+      'Shipped Profyl, one link with two ways to show your work, then custom domain mapping two weeks later. Now rebuilding the dashboard for v2.',
     featuredProject: { name: 'Profyl', thumbnailUrl: null },
   },
   {
@@ -22,7 +22,7 @@ export const FOUNDING_BUILDERS_LAUNCH_STATE: Builder[] = [
     skills: ['WhatsApp Automation', 'AI Integration'],
     profileHref: '#',
     profileSummary:
-      'Shipping a WhatsApp bot with real device-pairing logic — now adding AI to debug, review, and answer code questions in-chat.',
+      'Shipping a WhatsApp bot with real device-pairing logic, and now adding AI to debug, review, and answer code questions in-chat.',
     featuredProject: { name: 'WhatsApp Bot', thumbnailUrl: null },
   },
   {
@@ -46,7 +46,7 @@ export const FOUNDING_BUILDERS_LAUNCH_STATE: Builder[] = [
     skills: ['AI Integration'],
     profileHref: '#',
     profileSummary:
-      'Built Bookflix with a friend to stream books, manga, and manhwa with AI-generated summaries — shipped straight to real readers for feedback.',
+      'Built Bookflix with a friend to stream books, manga, and manhwa with AI-generated summaries, shipped straight to real readers for feedback.',
     featuredProject: { name: 'Bookflix', thumbnailUrl: null },
   },
 ];
