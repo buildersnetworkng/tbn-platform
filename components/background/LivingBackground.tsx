@@ -44,7 +44,6 @@ export function LivingBackground() {
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, []);
 
-  // Scroll-linked parallax: shift fields + particle layer as the page slides
   useEffect(() => {
     if (prefersReduced) return;
 
@@ -59,15 +58,12 @@ export function LivingBackground() {
         const el = rootRef.current;
         if (!el) return;
         const y = latestY;
-        el.style.setProperty('--scroll-y', String(y));
         el.style.setProperty('--parallax-slow', `${y * 0.08}px`);
         el.style.setProperty('--parallax-mid', `${y * 0.14}px`);
         el.style.setProperty('--parallax-fast', `${y * 0.22}px`);
         el.style.setProperty('--parallax-particles', `${y * 0.12}px`);
-        // Subtle hue shift through the page (0 → ~25deg)
         const max = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
         const progress = Math.min(y / max, 1);
-        el.style.setProperty('--scroll-progress', String(progress));
         el.style.setProperty('--hue-shift', `${progress * 28}deg`);
       });
     }
@@ -87,48 +83,47 @@ export function LivingBackground() {
       data-paused={isPaused || prefersReduced}
       data-reduced={prefersReduced ? 'true' : 'false'}
       className="living-background pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-background-primary"
-      style={
-        {
-          '--scroll-y': '0',
-          '--parallax-slow': '0px',
-          '--parallax-mid': '0px',
-          '--parallax-fast': '0px',
-          '--parallax-particles': '0px',
-          '--scroll-progress': '0',
-          '--hue-shift': '0deg',
-        } as React.CSSProperties
-      }
     >
-      {/* Soft full-bleed color mesh that shifts with scroll */}
-      <div className="living-mesh" />
+      {/* Color mesh — slow parallax + hue shift on scroll */}
+      <div className="living-parallax living-parallax-slow">
+        <div className="living-mesh" />
+      </div>
 
-      {/* Large drifting color fields */}
-      <div className="living-field living-field-1" />
-      <div className="living-field living-field-2" />
-      <div className="living-field living-field-3" />
-      <div className="living-field living-field-4" />
+      {/* Drifting orbs at different depths */}
+      <div className="living-parallax living-parallax-mid">
+        <div className="living-field living-field-1" />
+        <div className="living-field living-field-4" />
+      </div>
+      <div className="living-parallax living-parallax-fast">
+        <div className="living-field living-field-2" />
+      </div>
+      <div className="living-parallax living-parallax-slow">
+        <div className="living-field living-field-3" />
+      </div>
 
       {/* Flying particles */}
       {!prefersReduced && (
-        <div className="living-particles">
-          {particles.map((p) => (
-            <span
-              key={p.id}
-              className="living-particle"
-              style={
-                {
-                  left: `${p.x}%`,
-                  top: `${p.y}%`,
-                  width: p.size,
-                  height: p.size,
-                  opacity: p.opacity,
-                  animationDuration: `${p.duration}s`,
-                  animationDelay: `${p.delay}s`,
-                  ['--drift-x' as string]: `${p.driftX}vw`,
-                } as React.CSSProperties
-              }
-            />
-          ))}
+        <div className="living-parallax living-parallax-particles">
+          <div className="living-particles">
+            {particles.map((p) => (
+              <span
+                key={p.id}
+                className="living-particle"
+                style={
+                  {
+                    left: `${p.x}%`,
+                    top: `${p.y}%`,
+                    width: p.size,
+                    height: p.size,
+                    opacity: p.opacity,
+                    animationDuration: `${p.duration}s`,
+                    animationDelay: `${p.delay}s`,
+                    ['--drift-x' as string]: `${p.driftX}vw`,
+                  } as React.CSSProperties
+                }
+              />
+            ))}
+          </div>
         </div>
       )}
 
