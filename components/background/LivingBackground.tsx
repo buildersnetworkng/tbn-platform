@@ -3,37 +3,72 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useReducedMotion } from '@/experience';
 
-const PARTICLE_COUNT = 56;
+const STREAM_COUNT = 28;
+const NODE_COUNT = 18;
 
-type Particle = {
+type Stream = {
+  id: number;
+  x: number;
+  delay: number;
+  duration: number;
+  length: number;
+  opacity: number;
+};
+
+type GraphNode = {
   id: number;
   x: number;
   y: number;
-  size: number;
-  opacity: number;
-  duration: number;
-  delay: number;
-  driftX: number;
+  r: number;
+  pulse: number;
 };
 
-function createParticles(count: number): Particle[] {
+function createStreams(count: number): Stream[] {
   return Array.from({ length: count }, (_, id) => ({
     id,
-    x: Math.random() * 100,
-    y: Math.random() * 110 - 5,
-    size: 2.5 + Math.random() * 4.5,
-    opacity: 0.45 + Math.random() * 0.55,
-    duration: 10 + Math.random() * 16,
-    delay: Math.random() * -18,
-    driftX: (Math.random() - 0.5) * 50,
+    x: 4 + Math.random() * 92,
+    delay: Math.random() * -12,
+    duration: 4 + Math.random() * 7,
+    length: 40 + Math.random() * 90,
+    opacity: 0.25 + Math.random() * 0.55,
   }));
+}
+
+function createNodes(count: number): GraphNode[] {
+  // Deterministic-ish spread so the graph reads as infrastructure, not confetti
+  return Array.from({ length: count }, (_, id) => {
+    const col = id % 6;
+    const row = Math.floor(id / 6);
+    return {
+      id,
+      x: 8 + col * 16 + (row % 2) * 6 + (Math.random() - 0.5) * 4,
+      y: 12 + row * 28 + (Math.random() - 0.5) * 8,
+      r: 2 + (id % 3),
+      pulse: 2.5 + (id % 5) * 0.7,
+    };
+  });
+}
+
+function buildEdges(nodes: GraphNode[]): Array<[number, number]> {
+  const edges: Array<[number, number]> = [];
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      const dx = nodes[i].x - nodes[j].x;
+      const dy = nodes[i].y - nodes[j].y;
+      const dist = Math.hypot(dx, dy);
+      if (dist < 28) edges.push([i, j]);
+    }
+  }
+  return edges;
 }
 
 export function LivingBackground() {
   const prefersReduced = useReducedMotion();
   const [isPaused, setIsPaused] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
-  const particles = useMemo(() => createParticles(PARTICLE_COUNT), []);
+  const streams = useMemo(() => createStreams(STREAM_COUNT), []);
+  const nodes = useMemo(() => createNodes(NODE_COUNT), []);
+  const edges = useMemo(() => buildEdges(nodes), [nodes]);
 
   useEffect(() => {
     function handleVisibilityChange() {
@@ -58,13 +93,11 @@ export function LivingBackground() {
         const el = rootRef.current;
         if (!el) return;
         const y = latestY;
-        el.style.setProperty('--parallax-slow', `${y * 0.12}px`);
-        el.style.setProperty('--parallax-mid', `${y * 0.22}px`);
-        el.style.setProperty('--parallax-fast', `${y * 0.35}px`);
-        el.style.setProperty('--parallax-particles', `${y * 0.18}px`);
+        el.style.setProperty('--parallax-slow', `${y * 0.1}px`);
+        el.style.setProperty('--parallax-mid', `${y * 0.18}px`);
+        el.style.setProperty('--parallax-fast', `${y * 0.28}px`);
         const max = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
-        const progress = Math.min(y / max, 1);
-        el.style.setProperty('--hue-shift', `${progress * 40}deg`);
+        el.style.setProperty('--scroll-progress', String(Math.min(y / max, 1)));
       });
     }
 
@@ -85,38 +118,61 @@ export function LivingBackground() {
       className="living-background pointer-events-none fixed inset-0 z-0 overflow-hidden"
       style={{ backgroundColor: 'var(--color-bg-primary)' }}
     >
+      {/* Cool ambient core glow — restrained, not soft beauty orbs */}
+      <div className="tech-ambient" />
+
+      {/* Perspective engineering grid */}
       <div className="living-parallax living-parallax-slow">
-        <div className="living-mesh" />
+        <div className="tech-grid" />
       </div>
 
+      {/* Horizontal scan beam */}
+      {!prefersReduced && <div className="tech-scan" />}
+
+      {/* Node graph — infrastructure network */}
       <div className="living-parallax living-parallax-mid">
-        <div className="living-field living-field-1" />
-        <div className="living-field living-field-4" />
-      </div>
-      <div className="living-parallax living-parallax-fast">
-        <div className="living-field living-field-2" />
-      </div>
-      <div className="living-parallax living-parallax-slow">
-        <div className="living-field living-field-3" />
+        <svg className="tech-graph" viewBox="0 0 100 100" preserveAspectRatio="none">
+          {edges.map(([a, b], i) => (
+            <line
+              key={`e-${i}`}
+              className="tech-edge"
+              x1={nodes[a].x}
+              y1={nodes[a].y}
+              x2={nodes[b].x}
+              y2={nodes[b].y}
+              style={{ animationDelay: `${(i % 8) * 0.35}s` }}
+            />
+          ))}
+          {nodes.map((n) => (
+            <g key={n.id}>
+              <circle
+                className="tech-node-ring"
+                cx={n.x}
+                cy={n.y}
+                r={n.r + 1.2}
+                style={{ animationDuration: `${n.pulse}s`, animationDelay: `${n.id * 0.15}s` }}
+              />
+              <circle className="tech-node" cx={n.x} cy={n.y} r={n.r * 0.35} />
+            </g>
+          ))}
+        </svg>
       </div>
 
+      {/* Vertical data streams */}
       {!prefersReduced && (
-        <div className="living-parallax living-parallax-particles">
-          <div className="living-particles">
-            {particles.map((p) => (
+        <div className="living-parallax living-parallax-fast">
+          <div className="tech-streams">
+            {streams.map((s) => (
               <span
-                key={p.id}
-                className="living-particle"
+                key={s.id}
+                className="tech-stream"
                 style={
                   {
-                    left: `${p.x}%`,
-                    top: `${p.y}%`,
-                    width: p.size,
-                    height: p.size,
-                    opacity: p.opacity,
-                    animationDuration: `${p.duration}s`,
-                    animationDelay: `${p.delay}s`,
-                    ['--drift-x' as string]: `${p.driftX}vw`,
+                    left: `${s.x}%`,
+                    height: s.length,
+                    opacity: s.opacity,
+                    animationDuration: `${s.duration}s`,
+                    animationDelay: `${s.delay}s`,
                   } as React.CSSProperties
                 }
               />
@@ -125,8 +181,11 @@ export function LivingBackground() {
         </div>
       )}
 
-      <div className="living-noise" />
-      <div className="living-vignette" />
+      {/* Corner circuit marks */}
+      <div className="tech-circuit tech-circuit-tl" />
+      <div className="tech-circuit tech-circuit-br" />
+
+      <div className="tech-vignette" />
     </div>
   );
 }
