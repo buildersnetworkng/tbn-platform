@@ -23,9 +23,10 @@ export async function LiveOpportunities() {
           ))}
         </div>
       ) : (
-        <div className="mx-auto max-w-[720px] rounded-lg border border-border bg-surface px-6 py-10 text-center">
-          <p className="font-sans text-sm text-text-muted">
-            New opportunities are reviewed continuously. Check back soon.
+        <div className="mx-auto max-w-[720px] rounded-xl border border-border bg-surface-elevated/90 px-6 py-12 text-center backdrop-blur-sm">
+          <p className="font-serif text-lg text-text-primary">No live drops right now</p>
+          <p className="mt-2 font-sans text-sm leading-relaxed text-text-secondary">
+            New opportunities are reviewed continuously. When one opens, it shows up here first.
           </p>
         </div>
       )}
