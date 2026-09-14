@@ -9,15 +9,33 @@ import { DURATION, EASE_STANDARD, EASE_SIMPLE } from './motion/tokens';
 export const motionTokens = { DURATION, EASE_STANDARD, EASE_SIMPLE };
 
 export function useEntranceAnimation<T extends HTMLElement>(index = 0, itemCount = 1) {
-  const { ref, hasEntered } = useInViewport<T>(0.2);
+  const { ref, hasEntered } = useInViewport<T>(0.05);
   const prefersReduced = useReducedMotion();
   const delay = getStaggerDelay(index, itemCount);
 
   const variants: Variants = prefersReduced
-    ? { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: DURATION.base, ease: EASE_SIMPLE, delay } } }
-    : { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: { duration: DURATION.slow, ease: EASE_STANDARD, delay } } };
+    ? {
+        hidden: { opacity: 0 },
+        visible: {
+          opacity: 1,
+          transition: { duration: DURATION.base, ease: EASE_SIMPLE, delay },
+        },
+      }
+    : {
+        hidden: { opacity: 0, y: 16 },
+        visible: {
+          opacity: 1,
+          y: 0,
+          transition: { duration: DURATION.slow, ease: EASE_STANDARD, delay },
+        },
+      };
 
-  return { ref, animate: hasEntered ? 'visible' : 'hidden', initial: 'hidden', variants };
+  return {
+    ref,
+    animate: hasEntered ? 'visible' : 'hidden',
+    initial: 'hidden' as const,
+    variants,
+  };
 }
 
 export function useHoverElevate() {
