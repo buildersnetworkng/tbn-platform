@@ -103,10 +103,10 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               ))}
             </nav>
             <div className="flex flex-col items-center gap-3 pt-4">
-              <Button variant="secondary" href="/builders" className="w-full max-w-[280px]" onClick={onClose}>
+              <Button variant="secondary" href="/builders" className="w-full max-w-[280px]">
                 Explore Builders
               </Button>
-              <Button variant="primary" href="/apply" className="w-full max-w-[280px]" onClick={onClose}>
+              <Button variant="primary" href="/apply" className="w-full max-w-[280px]">
                 Apply
               </Button>
             </div>
