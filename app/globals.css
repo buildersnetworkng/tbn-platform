@@ -69,7 +69,7 @@ body {
   .identity-bar[data-scroll-state='scrolled'] { height: 52px; }
 }
 
-/* ── AI presence field ─────────────────────────────────────── */
+/* ── AI presence field (homepage) ──────────────────────────── */
 .presence-canvas {
   position: absolute;
   inset: 0;
@@ -78,7 +78,6 @@ body {
   display: block;
 }
 
-/* Darker vignette so mid-page content does not wash out into the glow */
 .presence-vignette {
   position: absolute;
   inset: 0;
@@ -98,6 +97,56 @@ body {
   opacity: 0.03;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   pointer-events: none;
+}
+
+/* ── Apply page ambient field (original DNA, advanced) ─────── */
+.apply-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.apply-gradient-mesh {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(198, 217, 255, 0.14), transparent 45%),
+    radial-gradient(circle at 80% 30%, rgba(198, 217, 255, 0.09), transparent 50%),
+    radial-gradient(circle at 50% 80%, rgba(198, 217, 255, 0.12), transparent 55%),
+    linear-gradient(120deg, #050608, #0a0c12, #0a0d14, #050608);
+  background-size: 180% 180%, 180% 180%, 180% 180%, 300% 300%;
+  background-position: 0% 0%, 100% 0%, 50% 100%, 0% 50%;
+  animation: apply-gradient-move 18s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes apply-gradient-move {
+  0% {
+    background-position: 0% 0%, 100% 0%, 50% 100%, 0% 50%;
+  }
+  50% {
+    background-position: 100% 100%, 0% 100%, 50% 0%, 100% 50%;
+  }
+  100% {
+    background-position: 0% 0%, 100% 0%, 50% 100%, 0% 50%;
+  }
+}
+
+.apply-noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .apply-gradient-mesh {
+    animation: none;
+    background-position: 40% 40%, 60% 30%, 50% 70%, 50% 50%;
+  }
 }
 
 /* ── Marquee ───────────────────────────────────────────────── */
