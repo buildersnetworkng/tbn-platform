@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 export default function ApplyPage() {
   return (
     <>
-      <Background mode="living" />
-      <div className="relative mx-auto grid min-h-[calc(100vh-72px)] w-full max-w-content grid-cols-1 gap-12 px-5 py-12 tablet:px-8 desktop:grid-cols-2 desktop:gap-16 desktop:px-12 desktop:py-16">
+      <Background mode="apply" />
+      <div className="relative z-10 mx-auto grid min-h-[calc(100vh-72px)] w-full max-w-content grid-cols-1 gap-12 px-5 py-12 tablet:px-8 desktop:grid-cols-2 desktop:gap-16 desktop:px-12 desktop:py-16">
         <aside className="hidden flex-col justify-between desktop:flex">
           <div className="max-w-[420px] pt-8">
             <p className="font-sans text-[11px] font-medium uppercase tracking-[0.18em] text-text-muted">
