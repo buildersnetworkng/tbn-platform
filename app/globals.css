@@ -99,7 +99,7 @@ body {
   pointer-events: none;
 }
 
-/* ── Apply ambient field — original DNA + breath ───────────── */
+/* ── Apply ambient field — original DNA + clear breath ─────── */
 .apply-canvas {
   position: absolute;
   inset: 0;
@@ -110,18 +110,21 @@ body {
 
 .apply-gradient-mesh {
   position: absolute;
-  inset: 0;
+  inset: -3%;
+  width: 106%;
+  height: 106%;
   background:
-    radial-gradient(ellipse 50% 45% at 18% 22%, rgba(198, 217, 255, 0.16), transparent 55%),
-    radial-gradient(ellipse 45% 40% at 82% 28%, rgba(160, 190, 255, 0.11), transparent 52%),
-    radial-gradient(ellipse 55% 48% at 48% 78%, rgba(198, 217, 255, 0.13), transparent 58%),
-    radial-gradient(ellipse 40% 35% at 70% 60%, rgba(120, 160, 230, 0.07), transparent 50%),
+    radial-gradient(ellipse 50% 45% at 18% 22%, rgba(198, 217, 255, 0.18), transparent 55%),
+    radial-gradient(ellipse 45% 40% at 82% 28%, rgba(160, 190, 255, 0.12), transparent 52%),
+    radial-gradient(ellipse 55% 48% at 48% 78%, rgba(198, 217, 255, 0.14), transparent 58%),
+    radial-gradient(ellipse 40% 35% at 70% 60%, rgba(120, 160, 230, 0.08), transparent 50%),
     linear-gradient(125deg, #050608 0%, #0a0c12 35%, #0b0e16 65%, #050608 100%);
   background-size: 200% 200%, 190% 190%, 210% 210%, 180% 180%, 320% 320%;
   background-position: 0% 0%, 100% 0%, 50% 100%, 80% 40%, 0% 50%;
+  transform-origin: center center;
   animation:
     apply-gradient-move 16s ease-in-out infinite,
-    apply-mesh-breathe 6.2s ease-in-out infinite;
+    apply-mesh-breathe 6.5s ease-in-out infinite;
   pointer-events: none;
 }
 
@@ -140,15 +143,15 @@ body {
   }
 }
 
-/* Calm inhale / exhale on the mesh itself */
+/* Clear inhale / exhale — opacity + gentle scale */
 @keyframes apply-mesh-breathe {
   0%, 100% {
-    opacity: 0.82;
+    opacity: 0.72;
     transform: scale(1);
   }
   50% {
     opacity: 1;
-    transform: scale(1.03);
+    transform: scale(1.045);
   }
 }
 
