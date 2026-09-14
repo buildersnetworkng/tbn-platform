@@ -99,7 +99,7 @@ body {
   pointer-events: none;
 }
 
-/* ── Apply ambient field — original DNA, advanced ──────────── */
+/* ── Apply ambient field — original DNA + breath ───────────── */
 .apply-canvas {
   position: absolute;
   inset: 0;
@@ -119,7 +119,9 @@ body {
     linear-gradient(125deg, #050608 0%, #0a0c12 35%, #0b0e16 65%, #050608 100%);
   background-size: 200% 200%, 190% 190%, 210% 210%, 180% 180%, 320% 320%;
   background-position: 0% 0%, 100% 0%, 50% 100%, 80% 40%, 0% 50%;
-  animation: apply-gradient-move 16s ease-in-out infinite;
+  animation:
+    apply-gradient-move 16s ease-in-out infinite,
+    apply-mesh-breathe 6.2s ease-in-out infinite;
   pointer-events: none;
 }
 
@@ -138,6 +140,18 @@ body {
   }
 }
 
+/* Calm inhale / exhale on the mesh itself */
+@keyframes apply-mesh-breathe {
+  0%, 100% {
+    opacity: 0.82;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+}
+
 .apply-noise {
   position: absolute;
   inset: 0;
@@ -150,6 +164,8 @@ body {
   .apply-gradient-mesh {
     animation: none;
     background-position: 40% 40%, 60% 30%, 50% 70%, 55% 50%, 50% 50%;
+    opacity: 0.9;
+    transform: none;
   }
 }
 
