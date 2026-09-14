@@ -2,15 +2,19 @@
 
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Button } from '../ui/Button';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence, motionTokens } from '@/experience';
 
 const NAV_ITEMS = [
+  { label: 'Home', href: '/' },
   { label: 'Builders', href: '/builders' },
   { label: 'Opportunities', href: '/opportunities' },
   { label: 'Organizations', href: '/organizations' },
   { label: 'About', href: '/about' },
 ] as const;
+
+const CTA_CLASS =
+  'inline-flex h-11 w-full max-w-[280px] items-center justify-center rounded-md px-5 text-sm font-medium transition-all duration-150 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.98]';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -19,6 +23,16 @@ interface MobileMenuProps {
 
 export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
+  const pathname = usePathname();
+  const prevPathRef = useRef(pathname);
+
+  // Close automatically whenever the route changes (covers all link taps)
+  useEffect(() => {
+    if (prevPathRef.current !== pathname) {
+      prevPathRef.current = pathname;
+      if (isOpen) onClose();
+    }
+  }, [pathname, isOpen, onClose]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -90,25 +104,40 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             onClick={(event) => event.stopPropagation()}
           >
             <nav aria-label="Primary" className="flex flex-col items-center gap-6">
-              {NAV_ITEMS.map((item, index) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  ref={index === 0 ? firstLinkRef : undefined}
-                  onClick={onClose}
-                  className="text-2xl font-serif text-text-primary transition-opacity duration-150 hover:opacity-80"
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {NAV_ITEMS.map((item, index) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    ref={index === 0 ? firstLinkRef : undefined}
+                    onClick={onClose}
+                    aria-current={isActive ? 'page' : undefined}
+                    className={`text-2xl font-serif transition-opacity duration-150 hover:opacity-80 ${
+                      isActive ? 'text-accent' : 'text-text-primary'
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
             </nav>
+
             <div className="flex flex-col items-center gap-3 pt-4">
-              <Button variant="secondary" href="/builders" className="w-full max-w-[280px]">
+              <Link
+                href="/builders"
+                onClick={onClose}
+                className={`${CTA_CLASS} border border-border bg-transparent text-text-primary hover:border-border-hover hover:bg-white/[0.06]`}
+              >
                 Explore Builders
-              </Button>
-              <Button variant="primary" href="/apply" className="w-full max-w-[280px]">
+              </Link>
+              <Link
+                href="/apply"
+                onClick={onClose}
+                className={`${CTA_CLASS} bg-accent text-background-primary hover:bg-accent-hover`}
+              >
                 Apply
-              </Button>
+              </Link>
             </div>
           </motion.div>
         </motion.div>
