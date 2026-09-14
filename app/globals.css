@@ -69,7 +69,7 @@ body {
   .identity-bar[data-scroll-state='scrolled'] { height: 52px; }
 }
 
-/* ── AI presence field (homepage) ──────────────────────────── */
+/* ── AI presence field (homepage only) ─────────────────────── */
 .presence-canvas {
   position: absolute;
   inset: 0;
@@ -99,7 +99,7 @@ body {
   pointer-events: none;
 }
 
-/* ── Apply page ambient field (original DNA, advanced) ─────── */
+/* ── Apply ambient field — original DNA, advanced ──────────── */
 .apply-canvas {
   position: absolute;
   inset: 0;
@@ -112,32 +112,36 @@ body {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 20% 20%, rgba(198, 217, 255, 0.14), transparent 45%),
-    radial-gradient(circle at 80% 30%, rgba(198, 217, 255, 0.09), transparent 50%),
-    radial-gradient(circle at 50% 80%, rgba(198, 217, 255, 0.12), transparent 55%),
-    linear-gradient(120deg, #050608, #0a0c12, #0a0d14, #050608);
-  background-size: 180% 180%, 180% 180%, 180% 180%, 300% 300%;
-  background-position: 0% 0%, 100% 0%, 50% 100%, 0% 50%;
-  animation: apply-gradient-move 18s ease-in-out infinite;
+    radial-gradient(ellipse 50% 45% at 18% 22%, rgba(198, 217, 255, 0.16), transparent 55%),
+    radial-gradient(ellipse 45% 40% at 82% 28%, rgba(160, 190, 255, 0.11), transparent 52%),
+    radial-gradient(ellipse 55% 48% at 48% 78%, rgba(198, 217, 255, 0.13), transparent 58%),
+    radial-gradient(ellipse 40% 35% at 70% 60%, rgba(120, 160, 230, 0.07), transparent 50%),
+    linear-gradient(125deg, #050608 0%, #0a0c12 35%, #0b0e16 65%, #050608 100%);
+  background-size: 200% 200%, 190% 190%, 210% 210%, 180% 180%, 320% 320%;
+  background-position: 0% 0%, 100% 0%, 50% 100%, 80% 40%, 0% 50%;
+  animation: apply-gradient-move 16s ease-in-out infinite;
   pointer-events: none;
 }
 
 @keyframes apply-gradient-move {
   0% {
-    background-position: 0% 0%, 100% 0%, 50% 100%, 0% 50%;
+    background-position: 0% 0%, 100% 0%, 50% 100%, 80% 40%, 0% 50%;
   }
-  50% {
-    background-position: 100% 100%, 0% 100%, 50% 0%, 100% 50%;
+  33% {
+    background-position: 60% 40%, 40% 80%, 20% 30%, 30% 70%, 40% 60%;
+  }
+  66% {
+    background-position: 100% 100%, 0% 60%, 70% 10%, 60% 20%, 80% 40%;
   }
   100% {
-    background-position: 0% 0%, 100% 0%, 50% 100%, 0% 50%;
+    background-position: 0% 0%, 100% 0%, 50% 100%, 80% 40%, 0% 50%;
   }
 }
 
 .apply-noise {
   position: absolute;
   inset: 0;
-  opacity: 0.35;
+  opacity: 0.28;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
   pointer-events: none;
 }
@@ -145,7 +149,7 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .apply-gradient-mesh {
     animation: none;
-    background-position: 40% 40%, 60% 30%, 50% 70%, 50% 50%;
+    background-position: 40% 40%, 60% 30%, 50% 70%, 55% 50%, 50% 50%;
   }
 }
 
