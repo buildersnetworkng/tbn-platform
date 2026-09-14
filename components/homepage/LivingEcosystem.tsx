@@ -24,12 +24,12 @@ export async function LivingEcosystem() {
           ))}
         </div>
       ) : (
-        <div className="mt-10 rounded-lg border border-border bg-surface px-6 py-14 text-center">
+        <div className="mt-10 rounded-xl border border-border bg-surface-elevated/90 px-6 py-12 text-center backdrop-blur-sm">
           <GrowthVisual />
           <p className="mt-6 font-serif text-lg text-text-primary tablet:text-xl">
             We report growth as it happens, not before it's real.
           </p>
-          <p className="mx-auto mt-2 max-w-[420px] font-sans text-sm text-text-muted">
+          <p className="mx-auto mt-2 max-w-[420px] font-sans text-sm text-text-secondary">
             These numbers go live the moment there's real activity behind them.
           </p>
         </div>
