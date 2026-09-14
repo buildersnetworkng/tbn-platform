@@ -30,15 +30,17 @@ export async function BuilderOfTheMonth() {
             <p className="mt-4 font-sans text-base leading-[1.5] text-text-secondary">{entry.shortStory}</p>
             <div className="mt-6">
               <Button variant="secondary" href={entry.href}>
-                View {entry.builderName}&apos;s profile
+                View {entry.builderName}'s profile
               </Button>
             </div>
           </div>
         </div>
       ) : (
-        <div className="mx-auto max-w-[560px] rounded-lg border border-dashed border-border bg-surface px-6 py-14 text-center">
+        <div className="mx-auto max-w-[560px] rounded-xl border border-border bg-surface-elevated/90 px-6 py-12 text-center backdrop-blur-sm">
           <p className="font-serif text-[22px] text-text-primary">Builder of the Month</p>
-          <p className="mt-2 font-sans text-sm text-text-muted">Coming soon.</p>
+          <p className="mt-2 font-sans text-sm text-text-secondary">
+            The first selection lands once the network has real work to highlight. Coming soon.
+          </p>
         </div>
       )}
     </SectionShell>
