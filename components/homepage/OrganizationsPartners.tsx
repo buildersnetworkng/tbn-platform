@@ -19,19 +19,32 @@ export async function OrganizationsPartners() {
       {organizations.length > 0 ? (
         <div className="grid grid-cols-3 items-center gap-8 tablet:grid-cols-4 desktop:grid-cols-6">
           {organizations.map((org) => (
-            <div key={org.id} className="flex h-[60px] items-center justify-center grayscale transition-all duration-200 hover:grayscale-0">
-              {org.logoUrl && (<Image src={org.logoUrl} alt={org.name} width={120} height={60} className="max-h-[40px] w-auto object-contain" />)}
+            <div
+              key={org.id}
+              className="flex h-[60px] items-center justify-center grayscale transition-all duration-200 hover:grayscale-0"
+            >
+              {org.logoUrl && (
+                <Image
+                  src={org.logoUrl}
+                  alt={org.name}
+                  width={120}
+                  height={60}
+                  className="max-h-[40px] w-auto object-contain"
+                />
+              )}
             </div>
           ))}
         </div>
       ) : (
-        <div className="mx-auto max-w-[560px] rounded-lg border border-border bg-surface px-6 py-14 text-center">
+        <div className="mx-auto max-w-[560px] rounded-xl border border-border bg-surface-elevated/90 px-6 py-12 text-center backdrop-blur-sm">
           <OrganizationSlotsVisual />
           <p className="mt-6 font-sans text-sm leading-[1.5] text-text-secondary">
             Partnership announcements appear here the moment they're official, not before.
           </p>
           <div className="mt-6 flex justify-center">
-            <Button variant="secondary" href="/partner">Partner With THE BUILDERS NETWORK</Button>
+            <Button variant="secondary" href="/partner">
+              Partner With THE BUILDERS NETWORK
+            </Button>
           </div>
         </div>
       )}
