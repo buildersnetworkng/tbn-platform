@@ -13,7 +13,7 @@ export default function HomePage() {
   return (
     <>
       <Background mode="living" />
-      <div className="min-h-screen [&>*+*]:mt-20 tablet:[&>*+*]:mt-30 desktop:[&>*+*]:mt-40">
+      <div className="relative z-10 min-h-screen space-y-16 tablet:space-y-24 desktop:space-y-32">
         <Hero />
         <BuilderIdentity />
         <CurrentBuilders />
