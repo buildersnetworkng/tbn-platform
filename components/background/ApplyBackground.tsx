@@ -4,9 +4,9 @@ import { useEffect, useRef } from 'react';
 import { useReducedMotion } from '@/experience';
 
 /**
- * Apply-page background — advanced evolution of the original apply/index.html field.
- * DNA: slow gradient mesh + soft drifting light pools + ambient motes + shared breath.
- * Not the homepage AI-presence core (no central eye, no orbiting rings).
+ * Apply-page background — original apply DNA, advanced, with a shared breath.
+ * Soft pools, motes, and field intensity expand/contract together (~5.5s cycle).
+ * Not the homepage AI-presence core.
  */
 export function ApplyBackground() {
   const prefersReduced = useReducedMotion();
@@ -27,7 +27,6 @@ export function ApplyBackground() {
     const start = performance.now();
     let paused = document.hidden;
 
-    // Soft ambient pools — distributed, never a single "eye"
     const blobs = Array.from({ length: 7 }, (_, i) => ({
       x: 0.12 + (i % 4) * 0.28 + ((i * 0.13) % 0.18),
       y: 0.15 + Math.floor(i / 3) * 0.32 + ((i * 0.09) % 0.2),
@@ -35,11 +34,10 @@ export function ApplyBackground() {
       ry: 0.18 + (i % 3) * 0.08,
       phase: i * 1.4,
       speed: 0.06 + (i % 5) * 0.018,
-      alpha: 0.09 + (i % 3) * 0.025,
+      alpha: 0.1 + (i % 3) * 0.028,
       hueShift: (i % 3) * 12,
     }));
 
-    // Fine floating motes with soft glow
     const motes = Array.from({ length: 42 }, () => ({
       x: Math.random(),
       y: Math.random(),
@@ -47,14 +45,13 @@ export function ApplyBackground() {
       vy: (Math.random() - 0.5) * 0.00016,
       size: 0.5 + Math.random() * 1.8,
       phase: Math.random() * Math.PI * 2,
-      glow: Math.random() > 0.7,
+      glow: Math.random() > 0.65,
     }));
 
-    // Slow horizontal light sweeps (ambient energy, not scanlines)
     const sweeps = [
-      { y: 0.22, speed: 0.04, width: 0.35, alpha: 0.045 },
-      { y: 0.55, speed: 0.03, width: 0.42, alpha: 0.035 },
-      { y: 0.78, speed: 0.05, width: 0.28, alpha: 0.04 },
+      { y: 0.22, speed: 0.04, width: 0.35, alpha: 0.05 },
+      { y: 0.55, speed: 0.03, width: 0.42, alpha: 0.04 },
+      { y: 0.78, speed: 0.05, width: 0.28, alpha: 0.045 },
     ];
 
     function resize() {
@@ -82,85 +79,84 @@ export function ApplyBackground() {
 
       const t = (now - start) / 1000;
 
-      // Shared breath — one calm inhale/exhale for the whole field (~6s cycle)
-      // Secondary breath adds organic irregularity so it never feels mechanical
-      const breath = 0.5 + 0.5 * Math.sin(t * 0.55);
-      const breath2 = 0.5 + 0.5 * Math.sin(t * 0.33 + 1.2);
-      const field = 0.72 + breath * 0.28; // global intensity scale
-      const expand = 1 + breath * 0.1 + breath2 * 0.04; // size swell
+      // Shared breath — calm inhale/exhale (~5.5s full cycle)
+      // easeInOut-ish via sin; secondary wave keeps it organic
+      const breath = 0.5 + 0.5 * Math.sin(t * 1.15);
+      const breath2 = 0.5 + 0.5 * Math.sin(t * 0.7 + 1.4);
+      const field = 0.62 + breath * 0.38; // intensity
+      const expand = 1 + breath * 0.16 + breath2 * 0.06; // size swell
 
       ctx!.clearRect(0, 0, w, h);
 
-      // Slow shifting cool field — opacity rides the breath
+      // Base field — radius and brightness ride the breath
       const gx = 0.5 + Math.sin(t * 0.06) * 0.14;
       const gy = 0.42 + Math.cos(t * 0.045) * 0.12;
-      const baseR = Math.max(w, h) * (0.85 + breath * 0.08);
+      const baseR = Math.max(w, h) * (0.78 + breath * 0.14);
       const base = ctx!.createRadialGradient(w * gx, h * gy, 0, w * gx, h * gy, baseR);
-      base.addColorStop(0, `rgba(22, 30, 52, ${0.42 * field})`);
-      base.addColorStop(0.4, `rgba(12, 14, 24, ${0.28 * field})`);
+      base.addColorStop(0, `rgba(28, 38, 62, ${0.5 * field})`);
+      base.addColorStop(0.4, `rgba(14, 16, 28, ${0.32 * field})`);
       base.addColorStop(1, 'rgba(5, 6, 8, 0)');
       ctx!.fillStyle = base;
       ctx!.fillRect(0, 0, w, h);
 
-      // Morphing soft light pools — swell and brighten together on the shared breath
+      // Soft light pools — swell + brighten on shared breath
       for (const b of blobs) {
         const driftX = Math.sin(t * b.speed + b.phase) * 0.07;
         const driftY = Math.cos(t * b.speed * 0.82 + b.phase * 1.25) * 0.055;
-        // Local phase offset so pools don't all peak at the exact same frame
-        const localBreath = 0.5 + 0.5 * Math.sin(t * 0.55 + b.phase * 0.35);
-        const breathScale = 1 + localBreath * 0.14 + breath2 * 0.05;
+        const localBreath = 0.5 + 0.5 * Math.sin(t * 1.15 + b.phase * 0.4);
+        const breathScale = expand * (0.92 + localBreath * 0.16);
         const squash = 1 + Math.sin(t * b.speed * 0.4 + b.phase * 0.7) * 0.08;
 
         const bx = w * (b.x + driftX);
         const by = h * (b.y + driftY);
-        const brx = Math.max(w, h) * b.rx * breathScale * expand;
-        const bry = Math.max(w, h) * b.ry * squash * expand;
+        const brx = Math.max(w, h) * b.rx * breathScale;
+        const bry = Math.max(w, h) * b.ry * squash * breathScale;
 
         ctx!.save();
         ctx!.translate(bx, by);
         ctx!.scale(1, bry / Math.max(brx, 1));
         const g = ctx!.createRadialGradient(0, 0, 0, 0, 0, brx);
-        const a = b.alpha * (0.55 + localBreath * 0.45) * field;
+        const a = b.alpha * (0.5 + localBreath * 0.55) * field;
         const r = 170 + b.hueShift;
         const green = 200 + Math.floor(b.hueShift * 0.4);
         g.addColorStop(0, `rgba(${r}, ${green}, 255, ${a})`);
-        g.addColorStop(0.3, `rgba(${Math.floor(r * 0.75)}, ${Math.floor(green * 0.85)}, 235, ${a * 0.4})`);
-        g.addColorStop(0.65, `rgba(70, 110, 200, ${a * 0.1})`);
+        g.addColorStop(0.28, `rgba(${Math.floor(r * 0.75)}, ${Math.floor(green * 0.85)}, 235, ${a * 0.45})`);
+        g.addColorStop(0.62, `rgba(70, 110, 200, ${a * 0.12})`);
         g.addColorStop(1, 'rgba(5, 6, 8, 0)');
         ctx!.fillStyle = g;
         ctx!.fillRect(-brx, -brx, brx * 2, brx * 2);
         ctx!.restore();
       }
 
-      // Soft light sweeps — strength follows breath
+      // Light sweeps — wider and brighter on inhale
       for (let i = 0; i < sweeps.length; i++) {
         const s = sweeps[i]!;
         const progress = (t * s.speed + i * 0.33) % 1;
         const sx = w * (progress * 1.4 - 0.2);
         const sy = h * (s.y + Math.sin(t * 0.08 + i) * 0.03);
-        const sw = w * s.width * (0.92 + breath * 0.12);
+        const sw = w * s.width * (0.88 + breath * 0.18);
 
         const sg = ctx!.createLinearGradient(sx - sw * 0.5, sy, sx + sw * 0.5, sy);
-        const sa = s.alpha * (0.5 + 0.5 * Math.sin(progress * Math.PI)) * field;
+        const sa = s.alpha * (0.45 + 0.55 * Math.sin(progress * Math.PI)) * field;
         sg.addColorStop(0, 'rgba(180, 210, 255, 0)');
         sg.addColorStop(0.5, `rgba(198, 217, 255, ${sa})`);
         sg.addColorStop(1, 'rgba(180, 210, 255, 0)');
         ctx!.fillStyle = sg;
-        ctx!.fillRect(sx - sw * 0.5, sy - h * 0.08, sw, h * 0.16);
+        ctx!.fillRect(sx - sw * 0.5, sy - h * 0.09, sw, h * 0.18);
       }
 
-      // Corner depth pools — soft swell with breath
+      // Corner depth — swell with breath
       const corners = [
-        { x: 0.06, y: 0.1, a: 0.08 },
-        { x: 0.94, y: 0.16, a: 0.055 },
-        { x: 0.18, y: 0.9, a: 0.065 },
-        { x: 0.88, y: 0.85, a: 0.04 },
+        { x: 0.06, y: 0.1, a: 0.09 },
+        { x: 0.94, y: 0.16, a: 0.06 },
+        { x: 0.18, y: 0.9, a: 0.07 },
+        { x: 0.88, y: 0.85, a: 0.045 },
       ];
       for (let i = 0; i < corners.length; i++) {
         const c = corners[i]!;
         const cx = w * (c.x + Math.sin(t * 0.05 + i * 1.1) * 0.025);
         const cy = h * (c.y + Math.cos(t * 0.045 + i * 1.3) * 0.02);
-        const cr = Math.max(w, h) * (0.3 + breath * 0.04);
+        const cr = Math.max(w, h) * (0.28 + breath * 0.07);
         const g = ctx!.createRadialGradient(cx, cy, 0, cx, cy, cr);
         g.addColorStop(0, `rgba(90, 140, 220, ${c.a * field})`);
         g.addColorStop(1, 'rgba(5, 6, 8, 0)');
@@ -168,7 +164,7 @@ export function ApplyBackground() {
         ctx!.fillRect(0, 0, w, h);
       }
 
-      // Ambient motes — brightness rides shared breath + local pulse
+      // Motes — size and brightness follow shared breath
       for (const m of motes) {
         m.x += m.vx + Math.sin(t * 0.14 + m.phase) * 0.00006;
         m.y += m.vy + Math.cos(t * 0.11 + m.phase) * 0.00005;
@@ -177,16 +173,16 @@ export function ApplyBackground() {
         if (m.y < -0.03) m.y = 1.03;
         if (m.y > 1.03) m.y = -0.03;
 
-        const localPulse = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * 0.65 + m.phase));
-        const pulse = localPulse * (0.65 + breath * 0.35);
+        const localPulse = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * 0.7 + m.phase));
+        const pulse = localPulse * (0.55 + breath * 0.45);
         const mx = m.x * w;
         const my = m.y * h;
-        const size = m.size * (0.9 + breath * 0.2);
+        const size = m.size * (0.85 + breath * 0.28);
 
         if (m.glow) {
-          const glowR = size * 4.5;
+          const glowR = size * 5;
           const pg = ctx!.createRadialGradient(mx, my, 0, mx, my, glowR);
-          pg.addColorStop(0, `rgba(210, 225, 255, ${0.14 * pulse})`);
+          pg.addColorStop(0, `rgba(210, 225, 255, ${0.16 * pulse})`);
           pg.addColorStop(1, 'rgba(5, 6, 8, 0)');
           ctx!.fillStyle = pg;
           ctx!.beginPath();
@@ -196,7 +192,7 @@ export function ApplyBackground() {
 
         ctx!.beginPath();
         ctx!.arc(mx, my, size, 0, Math.PI * 2);
-        ctx!.fillStyle = `rgba(198, 217, 255, ${0.18 * pulse})`;
+        ctx!.fillStyle = `rgba(198, 217, 255, ${0.2 * pulse})`;
         ctx!.fill();
       }
     }
