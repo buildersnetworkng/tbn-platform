@@ -14,12 +14,19 @@ export function IdentityBar() {
 
   return (
     <>
-      <header data-scroll-state={scrollState} className="identity-bar fixed top-0 left-0 right-0 z-50" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+      <header
+        data-scroll-state={scrollState}
+        className={`identity-bar fixed top-0 left-0 right-0 ${isMobileMenuOpen ? 'z-[70]' : 'z-50'}`}
+        style={{ paddingTop: 'env(safe-area-inset-top)' }}
+      >
         <div className="mx-auto flex h-full max-w-content items-center justify-between px-5 tablet:px-8 desktop:px-12">
           <IdentityBarLogo />
           <IdentityBarNav />
           <IdentityBarCTAs />
-          <MenuToggle isOpen={isMobileMenuOpen} onClick={() => setIsMobileMenuOpen((open) => !open)} />
+          <MenuToggle
+            isOpen={isMobileMenuOpen}
+            onClick={() => setIsMobileMenuOpen((open) => !open)}
+          />
         </div>
       </header>
       <div id="mobile-navigation">
